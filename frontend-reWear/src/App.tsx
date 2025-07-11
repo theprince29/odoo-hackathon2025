@@ -8,8 +8,13 @@ import UserDashboard from "./pages/user-dashborad";
 import NotFound from "./pages/not-found";
 import ItemListing from "./pages/item-listing";
 import AdminPage from "./pages/admin";
+import AdminLogin from "./components/admin/AdminLogin";
+
 
 function App() {
+
+  
+
   return (
     <>
       <Routes>
@@ -19,6 +24,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/add-new-item" element={<ItemListing />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
