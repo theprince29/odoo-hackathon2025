@@ -10,7 +10,7 @@ import ItemListing from "./pages/item-listing";
 import AdminPage from "./pages/admin";
 import AdminLogin from "./components/admin/AdminLogin";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
-
+import AllProduct from "./components/AllProductPage";
 
 function App() {
 
@@ -28,6 +28,8 @@ function App() {
         <Route path="/add-new-item" element={<ItemListing />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/item-listing" element={<AllProduct />} />
+     
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
