@@ -6,7 +6,7 @@ import { verifyAdmin } from '../middleware/auth.js';
 const router = express.Router()
 
 router.post("/login", adminLogin)
-router.get("/allProduct", verifyAdmin, getAllProducts)
+router.get("/allProduct", getAllProducts)
 router.patch('/:id/approval', verifyAdmin, updateProductApprovalStatus);
 
 export default router;

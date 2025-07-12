@@ -17,6 +17,8 @@ const ReWearLanding = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState({});
+  const token = localStorage.getItem("token");
+ 
 
   console.log(isVisible);
   // Featured items data
@@ -158,12 +160,21 @@ const ReWearLanding = () => {
             >
               About
             </a>
-            <button
-              onClick={() => {navigate("/login")}}
-              className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-            >
-              Sign In
-            </button>
+           {token ? (
+    <button
+      onClick={() => navigate("/dashboard")}
+      className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+    >
+      Dashboard
+    </button>
+  ) : (
+    <button
+      onClick={() => navigate("/login")}
+      className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+    >
+      Sign In
+    </button>
+  )}
           </div>
         </nav>
       </header>
@@ -423,7 +434,9 @@ const ReWearLanding = () => {
             <button className="bg-white text-emerald-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-50 transition-all duration-300 transform hover:scale-105">
               List an Item
             </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-emerald-600 transition-all duration-300">
+            <button className="border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-emerald-600 transition-all duration-300"
+              onClick={() => navigate("/item-listing")}
+             >
               Start Browsing
             </button>
           </div>
