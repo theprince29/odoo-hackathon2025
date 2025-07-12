@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
-
+ 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-import { Edit } from "lucide-react";
+import {
+  Badge,
+  Edit,
+  MapPin,
+
+  ShoppingBag,
+
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +31,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import MyListingsCard from "@/components/MyListingsCard";
+import MyPurchasesCard from "@/components/MyPurchase";
 
 export default function UserDashboard() {
   const navigate = useNavigate();
@@ -169,6 +179,12 @@ export default function UserDashboard() {
 
         {/* Listings Section */}
         {/* (You can keep your My Listings & My Purchases code unchanged below) */}
+       <MyListingsCard />
+
+
+        {/* My Purchases Section */}
+        <MyPurchasesCard />
+        
       </div>
     </div>
   );
