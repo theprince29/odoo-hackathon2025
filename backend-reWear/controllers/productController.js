@@ -5,18 +5,35 @@ import multer from 'multer';
 import User from '../models/User.js';
 import mongoose from 'mongoose';
 
-// Configure Multer - allows multiple files with field name 'images'
-export const upload = multer({ storage: multer.memoryStorage() }).array('images', 10); // Max 10 images
 
-// Configure Cloudinary
+
+
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Helper function to upload to Cloudinary
-const uploadToCloudinary = (buffer) => {
+const storage = multer.memoryStorage();
+
+export const upload = multer({ 
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, 
+    files: 5 
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed'), false);
+    }
+  }
+}).any();
+
+
+export const uploadToCloudinary = async (buffer) => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
@@ -28,11 +45,14 @@ const uploadToCloudinary = (buffer) => {
         else resolve(result);
       }
     );
-    streamifier.createReadStream(buffer).pipe(uploadStream);
+    
+   
+const bufferStream = streamifier.createReadStream(buffer);
+    bufferStream.pipe(uploadStream);
   });
 };
 
-// Helper function to delete from Cloudinary
+// Delete from Cloudinary helper
 const deleteFromCloudinary = async (publicId) => {
   try {
     await cloudinary.uploader.destroy(publicId);
@@ -42,18 +62,21 @@ const deleteFromCloudinary = async (publicId) => {
   }
 };
 
-// @desc    Create a new product
-// @route   POST /api/products
-// @access  Private
+// Create Product
 export const createProduct = async (req, res) => {
   try {
     const { title, description, category, type, size, condition, tags, pointsValue } = req.body;
     const userId = req.user._id;
 
-    // // Check if files were uploaded
-    // if (!req.files || req.files.length === 0) {
-    //   return res.status(400).json({ success: false, message: 'At least one image is required' });
-    // }
+    // Check if files were uploaded
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ success: false, message: 'At least one image is required' });
+    }
+
+    // Validate number of images (1-5)
+    if (req.files.length > 5) {
+      return res.status(400).json({ success: false, message: 'Maximum 5 images allowed' });
+    }
 
     // Upload images to Cloudinary
     const imageUploadPromises = req.files.map(file => 
@@ -95,7 +118,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-
+// Update Product
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -124,6 +147,11 @@ export const updateProduct = async (req, res) => {
 
     // Handle image updates if new files are uploaded
     if (req.files && req.files.length > 0) {
+      // Validate number of images (1-5)
+      if (req.files.length > 5) {
+        return res.status(400).json({ success: false, message: 'Maximum 5 images allowed' });
+      }
+
       // Upload new images
       const imageUploadPromises = req.files.map(file => 
         uploadToCloudinary(file.buffer)
@@ -158,7 +186,6 @@ export const updateProduct = async (req, res) => {
     });
   }
 };
-
 
 export const deleteProduct = async (req, res) => {
   try {
