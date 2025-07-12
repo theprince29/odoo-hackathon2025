@@ -1,74 +1,94 @@
-import{ useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Recycle, Users, ShoppingBag,  Heart, ArrowRight, Sparkles, Leaf, Globe } from 'lucide-react';
+import { useState, useEffect } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Recycle,
+  Users,
+  ShoppingBag,
+  Heart,
+  ArrowRight,
+  Sparkles,
+  Leaf,
+  Globe,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ReWearLanding = () => {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState({});
 
-  console.log(isVisible)
+  console.log(isVisible);
   // Featured items data
   const featuredItems = [
     {
       id: 1,
-      image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=400&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=400&fit=crop",
       title: "Vintage Denim Jacket",
       brand: "Levi's",
       size: "M",
       condition: "Excellent",
       points: 85,
       likes: 24,
-      category: "Jackets"
+      category: "Jackets",
     },
     {
       id: 2,
-      image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=400&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=400&fit=crop",
       title: "Floral Summer Dress",
       brand: "Zara",
       size: "S",
       condition: "Like New",
       points: 65,
       likes: 18,
-      category: "Dresses"
+      category: "Dresses",
     },
     {
       id: 3,
-      image: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=400&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=400&fit=crop",
       title: "Wool Blend Sweater",
       brand: "H&M",
       size: "L",
       condition: "Good",
       points: 45,
       likes: 12,
-      category: "Sweaters"
+      category: "Sweaters",
     },
     {
       id: 4,
-      image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=400&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=400&fit=crop",
       title: "Classic White Sneakers",
       brand: "Adidas",
       size: "9",
       condition: "Very Good",
       points: 55,
       likes: 31,
-      category: "Shoes"
+      category: "Shoes",
     },
     {
       id: 5,
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
       title: "Leather Crossbody Bag",
       brand: "Coach",
       size: "One Size",
       condition: "Excellent",
       points: 120,
       likes: 45,
-      category: "Accessories"
-    }
+      category: "Accessories",
+    },
   ];
 
   // Auto-scroll carousel
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % Math.max(1, featuredItems.length - 2));
+      setCurrentSlide(
+        (prev) => (prev + 1) % Math.max(1, featuredItems.length - 2)
+      );
     }, 4000);
     return () => clearInterval(timer);
   }, [featuredItems.length]);
@@ -79,25 +99,31 @@ const ReWearLanding = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setIsVisible(prev => ({ ...prev, [entry.target.id]: true }));
+            setIsVisible((prev) => ({ ...prev, [entry.target.id]: true }));
           }
         });
       },
       { threshold: 0.1 }
     );
 
-    const elements = document.querySelectorAll('[data-animate]');
-    elements.forEach(el => observer.observe(el));
+    const elements = document.querySelectorAll("[data-animate]");
+    elements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
   }, []);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % Math.max(1, featuredItems.length - 2));
+    setCurrentSlide(
+      (prev) => (prev + 1) % Math.max(1, featuredItems.length - 2)
+    );
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + Math.max(1, featuredItems.length - 2)) % Math.max(1, featuredItems.length - 2));
+    setCurrentSlide(
+      (prev) =>
+        (prev - 1 + Math.max(1, featuredItems.length - 2)) %
+        Math.max(1, featuredItems.length - 2)
+    );
   };
 
   return (
@@ -114,10 +140,28 @@ const ReWearLanding = () => {
             </span>
           </div>
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-gray-700 hover:text-emerald-600 transition-colors">How It Works</a>
-            <a href="#" className="text-gray-700 hover:text-emerald-600 transition-colors">Community</a>
-            <a href="#" className="text-gray-700 hover:text-emerald-600 transition-colors">About</a>
-            <button className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+            <a
+              href="#"
+              className="text-gray-700 hover:text-emerald-600 transition-colors"
+            >
+              How It Works
+            </a>
+            <a
+              href="#"
+              className="text-gray-700 hover:text-emerald-600 transition-colors"
+            >
+              Community
+            </a>
+            <a
+              href="#"
+              className="text-gray-700 hover:text-emerald-600 transition-colors"
+            >
+              About
+            </a>
+            <button
+              onClick={() => {navigate("/login")}}
+              className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+            >
               Sign In
             </button>
           </div>
@@ -133,18 +177,20 @@ const ReWearLanding = () => {
                 <Sparkles className="w-4 h-4" />
                 <span>Sustainable Fashion Revolution</span>
               </div>
-              
+
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
                 Give Your Clothes a
                 <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent block">
                   Second Life
                 </span>
               </h1>
-              
+
               <p className="text-xl text-gray-600 leading-relaxed">
-                Join ReWear's community clothing exchange. Swap, trade, and discover amazing pre-loved fashion while reducing textile waste and building sustainable wardrobes.
+                Join ReWear's community clothing exchange. Swap, trade, and
+                discover amazing pre-loved fashion while reducing textile waste
+                and building sustainable wardrobes.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4">
                 <button className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
                   <span>Start Swapping</span>
@@ -155,7 +201,7 @@ const ReWearLanding = () => {
                   <span>Browse Items</span>
                 </button>
               </div>
-              
+
               <div className="flex items-center space-x-8 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <Users className="w-5 h-5 text-emerald-500" />
@@ -171,7 +217,7 @@ const ReWearLanding = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-3xl transform rotate-3 opacity-20"></div>
               <div className="relative bg-white p-8 rounded-3xl shadow-2xl">
@@ -197,7 +243,7 @@ const ReWearLanding = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Floating Elements */}
         <div className="absolute top-20 right-20 w-16 h-16 bg-gradient-to-br from-emerald-300 to-teal-400 rounded-full opacity-20 animate-pulse"></div>
         <div className="absolute bottom-20 left-20 w-12 h-12 bg-gradient-to-br from-purple-300 to-pink-400 rounded-full opacity-20 animate-pulse delay-1000"></div>
@@ -214,10 +260,10 @@ const ReWearLanding = () => {
               Discover amazing pre-loved fashion from our community
             </p>
           </div>
-          
+
           <div className="relative">
             <div className="overflow-hidden rounded-2xl">
-              <div 
+              <div
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 33.333}%)` }}
               >
@@ -225,8 +271,8 @@ const ReWearLanding = () => {
                   <div key={item.id} className="w-1/3 flex-shrink-0 px-3">
                     <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden">
                       <div className="relative">
-                        <img 
-                          src={item.image} 
+                        <img
+                          src={item.image}
                           alt={item.title}
                           className="w-full h-64 object-cover"
                         />
@@ -242,19 +288,27 @@ const ReWearLanding = () => {
                           <h3 className="text-lg font-semibold text-gray-900 truncate">
                             {item.title}
                           </h3>
-                          <span className="text-sm text-gray-500">Size {item.size}</span>
+                          <span className="text-sm text-gray-500">
+                            Size {item.size}
+                          </span>
                         </div>
                         <p className="text-gray-600 mb-4">{item.brand}</p>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
                             <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
-                              <span className="text-white text-sm font-bold">{item.points}</span>
+                              <span className="text-white text-sm font-bold">
+                                {item.points}
+                              </span>
                             </div>
-                            <span className="text-sm text-gray-600">points</span>
+                            <span className="text-sm text-gray-600">
+                              points
+                            </span>
                           </div>
                           <div className="flex items-center space-x-1">
                             <Heart className="w-4 h-4 text-red-500 fill-current" />
-                            <span className="text-sm text-gray-600">{item.likes}</span>
+                            <span className="text-sm text-gray-600">
+                              {item.likes}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -263,37 +317,44 @@ const ReWearLanding = () => {
                 ))}
               </div>
             </div>
-            
-            <button 
+
+            <button
               onClick={prevSlide}
               className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors"
             >
               <ChevronLeft className="w-6 h-6 text-gray-600" />
             </button>
-            <button 
+            <button
               onClick={nextSlide}
               className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors"
             >
               <ChevronRight className="w-6 h-6 text-gray-600" />
             </button>
           </div>
-          
+
           <div className="flex justify-center mt-8 space-x-2">
-            {Array.from({ length: Math.max(1, featuredItems.length - 2) }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentSlide(i)}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  i === currentSlide ? 'bg-emerald-500' : 'bg-gray-300'
-                }`}
-              />
-            ))}
+            {Array.from(
+              { length: Math.max(1, featuredItems.length - 2) },
+              (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentSlide(i)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    i === currentSlide ? "bg-emerald-500" : "bg-gray-300"
+                  }`}
+                />
+              )
+            )}
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" data-animate className="px-6 py-20 bg-gradient-to-br from-emerald-50 to-teal-50">
+      <section
+        id="how-it-works"
+        data-animate
+        className="px-6 py-20 bg-gradient-to-br from-emerald-50 to-teal-50"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -303,35 +364,45 @@ const ReWearLanding = () => {
               Three simple steps to sustainable fashion
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center group">
               <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                 <ShoppingBag className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">List Your Items</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                List Your Items
+              </h3>
               <p className="text-gray-600 leading-relaxed">
-                Upload photos of clothes you no longer wear. Our AI helps categorize and price items fairly based on brand, condition, and demand.
+                Upload photos of clothes you no longer wear. Our AI helps
+                categorize and price items fairly based on brand, condition, and
+                demand.
               </p>
             </div>
-            
+
             <div className="text-center group">
               <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Recycle className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Swap or Trade</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Swap or Trade
+              </h3>
               <p className="text-gray-600 leading-relaxed">
-                Browse items from other members. Propose direct swaps or use points earned from your listings to claim items you love.
+                Browse items from other members. Propose direct swaps or use
+                points earned from your listings to claim items you love.
               </p>
             </div>
-            
+
             <div className="text-center group">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Globe className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Build Community</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Build Community
+              </h3>
               <p className="text-gray-600 leading-relaxed">
-                Connect with like-minded fashion lovers. Share styling tips, attend local swap events, and make sustainable fashion fun.
+                Connect with like-minded fashion lovers. Share styling tips,
+                attend local swap events, and make sustainable fashion fun.
               </p>
             </div>
           </div>
@@ -345,7 +416,8 @@ const ReWearLanding = () => {
             Ready to Transform Your Wardrobe?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Join thousands of fashion lovers making sustainable choices every day
+            Join thousands of fashion lovers making sustainable choices every
+            day
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="bg-white text-emerald-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-50 transition-all duration-300 transform hover:scale-105">
@@ -370,43 +442,107 @@ const ReWearLanding = () => {
                 <span className="text-xl font-bold">ReWear</span>
               </div>
               <p className="text-gray-400 leading-relaxed">
-                Making sustainable fashion accessible to everyone through community-driven clothing exchange.
+                Making sustainable fashion accessible to everyone through
+                community-driven clothing exchange.
               </p>
             </div>
-            
+
             <div>
               <h4 className="text-lg font-semibold mb-4">Platform</h4>
               <div className="space-y-2">
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">How It Works</a>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Pricing</a>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Safety</a>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Guidelines</a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  How It Works
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Pricing
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Safety
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Guidelines
+                </a>
               </div>
             </div>
-            
+
             <div>
               <h4 className="text-lg font-semibold mb-4">Community</h4>
               <div className="space-y-2">
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Events</a>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Blog</a>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Success Stories</a>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Impact Report</a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Events
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Blog
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Success Stories
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Impact Report
+                </a>
               </div>
             </div>
-            
+
             <div>
               <h4 className="text-lg font-semibold mb-4">Support</h4>
               <div className="space-y-2">
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Help Center</a>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Contact Us</a>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Help Center
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Contact Us
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Privacy Policy
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  Terms of Service
+                </a>
               </div>
             </div>
           </div>
-          
+
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 ReWear. All rights reserved. Made with 💚 for sustainable fashion.</p>
+            <p>
+              &copy; 2024 ReWear. All rights reserved. Made with 💚 for
+              sustainable fashion.
+            </p>
           </div>
         </div>
       </footer>
