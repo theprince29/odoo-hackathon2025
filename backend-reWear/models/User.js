@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -20,6 +19,28 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Password is required'],
     minlength: [6, 'Password must be at least 6 characters']
   },
+   points: {
+    type: Number,
+    default: 0
+  },
+    hasReceivedInitialPoints: {
+    type: Boolean,
+    default: false
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  emailOTP: {
+    type: String,
+    default: null
+  },
+  emailOTPExpires: {
+    type: Date,
+    default: null
+  },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 }, {
   timestamps: true
 });

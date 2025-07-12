@@ -2,6 +2,8 @@ import Product from '../models/Product.js';
 import { v2 as cloudinary } from 'cloudinary';
 import streamifier from 'streamifier';
 import multer from 'multer';
+import User from '../models/User.js';
+import mongoose from 'mongoose';
 
 // Configure Multer - allows multiple files with field name 'images'
 export const upload = multer({ storage: multer.memoryStorage() }).array('images', 10); // Max 10 images
@@ -48,10 +50,10 @@ export const createProduct = async (req, res) => {
     const { title, description, category, type, size, condition, tags, pointsValue } = req.body;
     const userId = req.user._id;
 
-    // Check if files were uploaded
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ success: false, message: 'At least one image is required' });
-    }
+    // // Check if files were uploaded
+    // if (!req.files || req.files.length === 0) {
+    //   return res.status(400).json({ success: false, message: 'At least one image is required' });
+    // }
 
     // Upload images to Cloudinary
     const imageUploadPromises = req.files.map(file => 
@@ -93,9 +95,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// @desc    Update a product
-// @route   PUT /api/products/:id
-// @access  Private (owner or admin)
+
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -284,6 +284,77 @@ export const updateProductApprovalStatus = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Server error',
+      error: error.message
+    });
+  }
+};
+
+
+
+
+
+export const buyProduct = async (req, res) => {
+  try {
+    const { productId } = req.body;
+    const buyerId = req.user._id;
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found'
+      });
+    }
+
+
+
+    const buyer = await User.findById(buyerId);
+    const seller = await User.findById(product.owner);
+
+    if (buyer.points < product.pointsValue) {
+      return res.status(400).json({
+        success: false,
+        message: 'Insufficient points'
+      });
+    }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+
+      buyer.points -= product.pointsValue;
+      await buyer.save({ session });
+
+      seller.points += product.pointsValue;
+      await seller.save({ session });
+
+  
+      product.owner = buyerId;
+      product.status = 'swapped';
+      await product.save({ session });
+
+
+      await session.commitTransaction();
+
+      res.status(200).json({
+        success: true,
+        message: 'Product purchased successfully',
+        newBalance: buyer.points
+      });
+
+    } catch (error) {
+
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error during purchase',
       error: error.message
     });
   }
