@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Mountain, ArrowLeft, Recycle } from "lucide-react";
+import {  ArrowLeft, Recycle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function RegisterPage() {
