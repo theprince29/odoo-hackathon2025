@@ -6,9 +6,11 @@ export const protect = async (req, res, next) => {
   try {
     let token;
 
-    // Get token from cookies
+    // Get token from cookies or Authorization header
     if (req.cookies.token) {
       token = req.cookies.token;
+    } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
     }
 
     // Check if token exists
@@ -22,26 +24,21 @@ export const protect = async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Get user from token
+    // Get full user document from database
     const user = await User.findById(decoded.userId).select('-password');
+    
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Token is not valid'
+        message: 'Token is not valid - user not found'
       });
     }
 
-    // Check if user is active
-    if (!user.isActive) {
-      return res.status(401).json({
-        success: false,
-        message: 'User account is deactivated'
-      });
-    }
-
-    req.user = decoded;
+    // Set the full user document on req.user
+    req.user = user;
     next();
   } catch (error) {
+    console.error('Authentication error:', error);
     res.status(401).json({
       success: false,
       message: 'Token is not valid'
