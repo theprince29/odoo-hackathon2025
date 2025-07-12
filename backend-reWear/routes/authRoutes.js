@@ -2,8 +2,9 @@ import express from 'express';
 import {
   register,
   login,
-  logout,
-  getCurrentUser,
+  verifyEmail
+  // logout,
+  // getCurrentUser,
 } from '../controllers/authController.js';
 import { protect } from '../middleware/auth.js';
 import {
@@ -15,9 +16,10 @@ const router = express.Router();
 
 
 router.post('/register', validateRegister, register);
+router.post("/verifyEmail", verifyEmail)
 router.post('/login', validateLogin, login);
-router.post('/logout', logout);
+// router.post('/logout', logout);
 
-router.get('/me', protect, getCurrentUser);
+// router.get('/me', protect, getCurrentUser);
 
 export default router;
