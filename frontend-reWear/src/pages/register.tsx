@@ -11,9 +11,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import {  ArrowLeft, Recycle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import { useState } from "react";
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
+  const { register, loading, error } = useAuthStore();
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    agree: false,
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.agree) return alert("Please agree to the terms");
+    if (formData.password !== formData.confirmPassword)
+      return alert("Passwords do not match");
+
+    const fullName = `${formData.firstName} ${formData.lastName}`;
+
+    await register(fullName, formData.email, formData.password);
+
+    // After successful register, navigate to verify page
+    navigate("/verify-email");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -29,105 +65,117 @@ export default function RegisterPage() {
               </span>
             </div>
           </Link>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Create your account
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">Create your account</h1>
           <p className="text-muted-foreground mt-2">
             Join thousands of users already using our platform
           </p>
         </div>
 
         {/* Registration Form */}
-        <Card className="shadow-lg border-0">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl">Sign up</CardTitle>
-            <CardDescription>
-              Enter your information below to create your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit}>
+          <Card className="shadow-lg border-0">
+            <CardHeader className="space-y-1 pb-4">
+              <CardTitle className="text-xl">Sign up</CardTitle>
+              <CardDescription>
+                Enter your information below to create your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First name</Label>
+                  <Input
+                    id="firstName"
+                    placeholder="John"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last name</Label>
+                  <Input
+                    id="lastName"
+                    placeholder="Doe"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
               <div className="space-y-2">
-                <Label htmlFor="firstName">First name</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
-                  id="firstName"
-                  placeholder="John"
+                  id="email"
+                  type="email"
+                  placeholder="john@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
                   required
-                  className="transition-all focus:ring-2 focus:ring-primary/20"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName">Last name</Label>
+                <Label htmlFor="password">Password</Label>
                 <Input
-                  id="lastName"
-                  placeholder="Doe"
+                  id="password"
+                  type="password"
+                  placeholder="Create a strong password"
+                  value={formData.password}
+                  onChange={handleChange}
                   required
-                  className="transition-all focus:ring-2 focus:ring-primary/20"
                 />
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="john@example.com"
-                required
-                className="transition-all focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Create a strong password"
-                required
-                className="transition-all focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm your password"
-                required
-                className="transition-all focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox id="terms" />
-              <Label
-                htmlFor="terms"
-                className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="agree" checked={formData.agree} onCheckedChange={(checked: any) => setFormData((prev) => ({ ...prev, agree: !!checked }))} />
+                <Label
+                  htmlFor="agree"
+                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  I agree to the{" "}
+                  <Link to="/terms" className="text-primary hover:underline">
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link to="/privacy" className="text-primary hover:underline">
+                    Privacy Policy
+                  </Link>
+                </Label>
+              </div>
+              {error && (
+                <p className="text-sm text-red-500 pt-2 font-medium">{error}</p>
+              )}
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-4">
+              <Button
+                type="submit"
+                className="w-full h-11 text-base font-medium"
+                disabled={loading}
               >
-                I agree to the{" "}
-                <Link to="/terms" className="text-primary hover:underline">
-                  Terms of Service
-                </Link>{" "}
-                and{" "}
-                <Link to="/privacy" className="text-primary hover:underline">
-                  Privacy Policy
+                {loading ? "Creating..." : "Create account"}
+              </Button>
+              <div className="text-center text-sm text-muted-foreground">
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  className="text-primary hover:underline font-medium"
+                >
+                  Sign in
                 </Link>
-              </Label>
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button className="w-full h-11 text-base font-medium">
-              Create account
-            </Button>
-            <div className="text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="text-primary hover:underline font-medium"
-              >
-                Sign in
-              </Link>
-            </div>
-          </CardFooter>
-        </Card>
+              </div>
+            </CardFooter>
+          </Card>
+        </form>
 
         {/* Back to home */}
         <div className="text-center mt-6">

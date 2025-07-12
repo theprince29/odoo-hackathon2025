@@ -9,6 +9,7 @@ import NotFound from "./pages/not-found";
 import ItemListing from "./pages/item-listing";
 import AdminPage from "./pages/admin";
 import AdminLogin from "./components/admin/AdminLogin";
+import VerifyEmailPage from "./pages/VerifyEmailPage";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/" element={<ReWearLanding />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/add-new-item" element={<ItemListing />} />
