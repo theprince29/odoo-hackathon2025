@@ -17,3 +17,11 @@ discarding them.</p>
 > 2. Shivam Gupta <br> sg641818@gmail.com
 
 > 3. Shubham Dwivedi <br> dwivedishubham545@gmail.com
+
+
+---
+
+## 🔗 Project Demo Video  
+🎥 Watch the demo here: [ReWear Hackathon Demo](https://drive.google.com/file/d/1OrE_YNsCoUqCCbQp7zB3DlpUP6_IJhlk/view)
+
+---
