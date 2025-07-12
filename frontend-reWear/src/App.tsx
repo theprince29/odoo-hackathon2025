@@ -6,6 +6,7 @@ import LoginPage from "./pages/login";
 import ForgotPasswordPage from "./pages/forgotPassword";
 import UserDashboard from "./pages/user-dashborad";
 import NotFound from "./pages/not-found";
+import ItemListing from "./pages/item-listing";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/add-new-item" element={<ItemListing />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
