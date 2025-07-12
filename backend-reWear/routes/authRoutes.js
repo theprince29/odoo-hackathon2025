@@ -5,7 +5,7 @@ import {
   logout,
   getCurrentUser,
 } from '../controllers/authController.js';
-import { protect, authorize } from '../middleware/auth.js';
+import { protect } from '../middleware/auth.js';
 import {
   validateRegister,
   validateLogin,
