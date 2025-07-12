@@ -1,12 +1,28 @@
 import SibApiV3Sdk from 'sib-api-v3-sdk';
 import dotenv from 'dotenv';
 import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
 dotenv.config();
 
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.BREVO_API_KEY;
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+const generateToken = (userId) => {
+  return jwt.sign({ userId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN
+  });
+};
+
+const setTokenCookie = (res, token) => {
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 7 * 24 * 60 * 60 * 1000 
+  });
+};
 
 // Generate OTP
 const generateOTP = () => {
@@ -111,6 +127,10 @@ export const verifyEmail = async (req, res) => {
     user.isVerified = true;
     user.emailOTP = null;
     user.emailOTPExpires = null;
+     if (!user.hasReceivedInitialPoints) {
+      user.points = 1000;
+      user.hasReceivedInitialPoints = true;
+    }
     await user.save();
 
     // Generate token and log user in
@@ -141,14 +161,7 @@ export const verifyEmail = async (req, res) => {
 // Update login to check for verification
 export const login = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation failed',
-        errors: errors.array()
-      });
-    }
+  
 
     const { email, password } = req.body;
 
@@ -181,6 +194,10 @@ export const login = async (req, res) => {
     // Generate token
     const token = generateToken(user._id);
     setTokenCookie(res, token);
+     if (!user.hasReceivedInitialPoints) {
+      user.points = 1000;
+      user.hasReceivedInitialPoints = true;
+    }
 
     res.json({
       success: true,
@@ -189,6 +206,7 @@ export const login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        points: user.points,
         token: token
       }
     });
